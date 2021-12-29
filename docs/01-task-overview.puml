@@ -1,0 +1,12 @@
+@startuml
+
+rectangle producer {
+
+}
+
+
+rectangle conumer {
+
+    
+}
+@enduml
