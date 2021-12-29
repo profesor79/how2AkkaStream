@@ -1,4 +1,4 @@
-﻿namespace consumer
+﻿namespace common
 {
     internal class StreamConsumer
     {
@@ -8,21 +8,5 @@
         }
 
         public Configuration Configuration { get; }
-    }
-
-    public class Configuration
-    {
-
-        public int Port { get; set; }
-
-
-
-        public string HostName { get; set; }
-
-        public Configuration(string hostName, int port)
-        {
-            Port = port;
-            HostName = hostName;
-        }
     }
 }

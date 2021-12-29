@@ -1,4 +1,5 @@
 
+using common;
 using System.Net;
 using System.Net.Sockets;
 
@@ -39,21 +40,4 @@ public class Producer
     }
     TcpClient _tcpClient;
     public Configuration Conf { get; }
-}
-
-
-public class Configuration
-{
-
-    public int Port { get; set; }
-
-
-
-    public string HostName { get; set; }
-
-    public Configuration(string hostName, int port)
-    {
-        Port = port;
-        HostName = hostName;
-    }
 }
