@@ -6,4 +6,7 @@ Console.WriteLine("Hello, World!");
 
 var c = new Configuration("localhost", 35000);
 
-var st = new StreamConsumer(c);
+var st = new StreamConsumer();
+st.Start(c);
+Console.WriteLine("waiting to finish");
+Console.ReadLine(); ;
