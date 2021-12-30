@@ -1,14 +1,20 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using Akka.Actor;
 using common;
-
+using Serilog;
 
 SerilogBase.SetLoggerConfiguration("consumer");
 Console.WriteLine("Hello, World!");
 
 
-var c = new Configuration("localhost", 35000);
+var c = new Configuration();
 
 var st = new StreamConsumer();
-st.Start(c);
 Console.WriteLine("waiting to finish");
-Console.ReadLine(); ;
+Log.Debug ("starting this thing");
+var actorSystem = ActorSystem.Create("system", AkkaConfiguration.GetConfig("consumer"));
+st.Start(c, actorSystem);
+
+Thread.Sleep(5000);
+Console.WriteLine("finish");
+ actorSystem.WhenTerminated.Wait();

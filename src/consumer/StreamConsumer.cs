@@ -13,11 +13,11 @@ namespace common
 {
     internal class StreamConsumer
     {
-        public async void Start(Configuration c)
+        public async void Start(Configuration c, ActorSystem actorSystem)
         {
             Configuration = c;
 
-            var actorSystem = ActorSystem.Create("system", AkkaConfiguration.GetConfig("consumer"));
+            
             IMaterializer materializer = actorSystem.Materializer();
                 IPAddress localAddr = IPAddress.Any;
             // define an incoming request processing logic
@@ -41,21 +41,18 @@ namespace common
                     .Via(Framing.Delimiter(ByteString.FromString("\n"),                          maximumFrameLength: 512,                          allowTruncation: true))
                       .Select(c => c.ToString())
 
-                      //.Select(c =>{ Console.Write("."); return c;})
+                      .Select(c =>{ Console.Write("."); return c;})
                       .Select(ByteString.FromString);
 
-                  connection.HandleWith(echo, materializer);
+          var c =        connection.HandleWith(echo, materializer);
 
                 //  var closed = Flow.FromSinkAndSource(Sink.Cancelled<ByteString>(), Source.Empty<ByteString>());
                //  connection.HandleWith(closed, materializer);
-
+         
             }, materializer);
 
-
-           
-
-            // close server after everything is done
-          //  await binding.Unbind();
+   
+          
         }
 
         public Configuration Configuration; 
