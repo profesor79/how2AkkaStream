@@ -15,8 +15,8 @@ public class Producer
     public void SendData()
     {
 
-        var message = "234512345";
-        Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+        var message = "\n23451aaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2345";
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes($"{DateTime.UtcNow}  {message}");
         while (true)
         {
 

@@ -33,23 +33,28 @@ namespace common
     actorSystem.TcpStream().Bind(c.HostName, c.Port);
 
 
-            connections.RunForeach(connection =>
-            {
-                Console.WriteLine($"New connection from: {connection.RemoteAddress}");
+            _ = connections.RunForeach(connection =>
+              {
+                  Console.WriteLine($"New connection from: {connection.RemoteAddress}");
 
-                var echo = Flow.Create<ByteString>()
-                    .Via(Framing.Delimiter(
-                        ByteString.FromString("\n"),
-                        maximumFrameLength: 256,
-                        allowTruncation: true))
-                    .Select(c => c.ToString())
-                    .Select(c => c + "!!!\n")
-                    .Select(ByteString.FromString);
+                  var echo = Flow.Create<ByteString>()
+                      .Via(Framing.Delimiter(
+                          ByteString.FromString("\n"),
+                          maximumFrameLength: 512,
+                          allowTruncation: true))
+                      .Select(c => c.ToString())
 
-                connection.HandleWith(echo, materializer);
+                      .Select(c =>
+                      {
+                          Console.WriteLine(c);
+                          return c;
+                      })
+                      .Select(ByteString.FromString);
 
-                var closed = Flow.FromSinkAndSource(Sink.Cancelled<ByteString>(), Source.Empty<ByteString>());
-              //  connection.HandleWith(closed, materializer);
+                  connection.HandleWith(echo, materializer);
+
+                  var closed = Flow.FromSinkAndSource(Sink.Cancelled<ByteString>(), Source.Empty<ByteString>());
+                //  connection.HandleWith(closed, materializer);
 
             }, materializer);
 
