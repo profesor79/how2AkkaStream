@@ -1,5 +1,6 @@
 ﻿namespace common
 {
+
     public class Configuration
     {
 

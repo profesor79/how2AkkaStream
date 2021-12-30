@@ -6,28 +6,39 @@ using System.Net.Sockets;
 public class Producer
 {
 
-    public Producer(Configuration conf)
+    public Producer(Configuration conf, int id)
     {
         Conf = conf;
+        Id = id;
         Connect();
-        SendData();
+        Task.Factory.StartNew(() => SendData());
     }
     public void SendData()
     {
 
-        var message = "\n23451aaaaeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa2345";
-        Byte[] data = System.Text.Encoding.ASCII.GetBytes($"{DateTime.UtcNow}  {message}");
-        while (true)
+        var message = $"{Id}---\n23451aaaaeeeeeeeeeeeaaaaaaaaaaaa2345";
+        Byte[] data = System.Text.Encoding.ASCII.GetBytes($"{DateTime.UtcNow.ToString("HH:mm:ss.fff")}  {message}");
+        NetworkStream stream = _tcpClient.GetStream();
+        stream.WriteTimeout = 5000;
+        
+        var canWrite = true;
+        while (canWrite)
         {
-
-            // Get a client stream for reading and writing.
-            //  Stream stream = client.GetStream();
-
-            NetworkStream stream = _tcpClient.GetStream();
-            // Send the message to the connected TcpServer.
+            try
+            {
+     // Send the message to the connected TcpServer.
             stream.Write(data, 0, data.Length);
-
-            Console.Write(".");
+           // Thread.Sleep(1);
+            Console.Write(Id);
+              //  Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+            }
+            catch (Exception)
+            {
+                canWrite = false;
+                
+            }
+               
+       
         }
 
     }
@@ -40,4 +51,5 @@ public class Producer
     }
     TcpClient _tcpClient;
     public Configuration Conf { get; }
+    public int Id { get; }
 }

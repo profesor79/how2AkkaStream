@@ -5,14 +5,19 @@ Console.WriteLine("Hello, World!");
 var c = new Configuration();
 
 
-while (true) {
+
     try
     {
-        var producer = new Producer(c);
+        for (int i = 0; i < 2; i++)
+        {
+            var producer = new Producer(c,i);
+        }
+        
     }
     catch (Exception t)
     {
         Console.WriteLine(t.Message);
 
     }
-}
+
+    Console.ReadLine();

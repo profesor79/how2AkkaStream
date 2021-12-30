@@ -17,7 +17,7 @@ namespace common
         {
             Configuration = c;
 
-            var actorSystem = ActorSystem.Create("system");
+            var actorSystem = ActorSystem.Create("system", AkkaConfiguration.GetConfig("consumer"));
             IMaterializer materializer = actorSystem.Materializer();
                 IPAddress localAddr = IPAddress.Any;
             // define an incoming request processing logic
@@ -38,23 +38,16 @@ namespace common
                   Console.WriteLine($"New connection from: {connection.RemoteAddress}");
 
                   var echo = Flow.Create<ByteString>()
-                      .Via(Framing.Delimiter(
-                          ByteString.FromString("\n"),
-                          maximumFrameLength: 512,
-                          allowTruncation: true))
+                    .Via(Framing.Delimiter(ByteString.FromString("\n"),                          maximumFrameLength: 512,                          allowTruncation: true))
                       .Select(c => c.ToString())
 
-                      .Select(c =>
-                      {
-                          Console.WriteLine(c);
-                          return c;
-                      })
+                      //.Select(c =>{ Console.Write("."); return c;})
                       .Select(ByteString.FromString);
 
                   connection.HandleWith(echo, materializer);
 
-                  var closed = Flow.FromSinkAndSource(Sink.Cancelled<ByteString>(), Source.Empty<ByteString>());
-                //  connection.HandleWith(closed, materializer);
+                //  var closed = Flow.FromSinkAndSource(Sink.Cancelled<ByteString>(), Source.Empty<ByteString>());
+               //  connection.HandleWith(closed, materializer);
 
             }, materializer);
 
